@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1067982286498",
+    "project_id": "grenier-du-faso",
+    "storage_bucket": "grenier-du-faso.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1067982286498:android:bebcfd4d88d6625d8eb1fb",
+        "android_client_info": {
+          "package_name": "com.example.grenierdufaso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1067982286498-kqsilmru0qbd3jnoo4m82k6uon24ghgr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC2nlpQs_inmTFISJ-80yxKyj6UwHvqDl4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1067982286498-kqsilmru0qbd3jnoo4m82k6uon24ghgr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1067982286498-rniurukgdivv5u9fupo4vjd41872vrhp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.grenierdufaso"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
