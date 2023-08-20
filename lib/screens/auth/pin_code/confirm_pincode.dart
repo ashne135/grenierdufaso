@@ -86,7 +86,7 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
                 Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) {
                   return HomePageScreen(
-                    user: widget.user,
+                 
                   );
                 }), (route) => false));
           } else {
@@ -98,7 +98,7 @@ class _ConfirmCodeScreenState extends State<ConfirmCodeScreen> {
               MaterialPageRoute(
                 builder: (context) {
                   return HomePageScreen(
-                    user: widget.user,
+                    
                   );
                 },
               ),

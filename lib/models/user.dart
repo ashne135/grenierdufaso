@@ -113,4 +113,4 @@ List<MyUser> groupMembres = [
       };
 }
 
-que j'affiche dans un Column() , je vous voudrais également faire un TextField comme premier enfant du column() qui permettra de de filtrer sur MyUser par le fullName. Comment faire ? */
+ */

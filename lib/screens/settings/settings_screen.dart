@@ -17,8 +17,8 @@ import 'widgets/name_container.dart';
 import 'widgets/top_row.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key, required this.user});
-  final MyUser user;
+  const SettingsScreen({super.key});
+  //final MyUser? user;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -86,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              TopRow(user: widget.user),
+              //TopRow(user: user),
               const SizedBox(
                 height: 25.0,
               ),
@@ -95,7 +95,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 fontSize: 16,
                 fontWeight: FontWeight.normal,
               ),
-              NameContainer(text: widget.user.email),
+              
+              NameContainer(text: ''),
               const SizedBox(
                 height: 25.0,
               ),

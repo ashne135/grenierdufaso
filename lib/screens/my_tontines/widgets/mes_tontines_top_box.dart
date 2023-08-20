@@ -57,7 +57,7 @@ class MesTontinesTopBox extends StatelessWidget {
                       builder: (context) {
                         return JeParticipe(
                           tontineList: allTontineWhereCurrentUserParticipe,
-                          user: widget.user,
+                          user: widget.user!,
                         );
                       },
                     ),
@@ -163,7 +163,7 @@ class MesTontinesTopBox extends StatelessWidget {
                       .push(MaterialPageRoute(builder: (context) {
                     return Jorganise(
                       tontineList: currentUSerTontineList,
-                      user: widget.user,
+                      user: widget.user!,
                     );
                   }));
                 } else {

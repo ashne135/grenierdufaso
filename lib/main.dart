@@ -4,6 +4,7 @@ import 'package:grenierdufaso/splash.dart';
 import 'package:grenierdufaso/style/palette.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -21,6 +22,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
+      localizationsDelegates: [
+    GlobalMaterialLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ],
+  supportedLocales: [
+    const Locale('en', ''), // Ajoutez les localisations que vous souhaitez prendre en charge
+    const Locale('fr', ''),
+    // ...
+  ],
       title: 'Grenier du Faso',
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,

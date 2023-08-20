@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../style/palette.dart';
+import '../../home_page/home_page.dart';
 
 class LoginTextField extends StatefulWidget {
   const LoginTextField({
@@ -204,4 +207,50 @@ class _LoginTextFieldState extends State<LoginTextField> {
       ],
     );
   }
+
+  void createAdminAccount() async {
+  try {
+    // Créez un nouvel utilisateur avec l'email et le mot de passe
+    UserCredential userCredential =
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: widget.emailController.text,
+      password: widget.passwordController.text,
+    );
+
+    // Récupérez l'utilisateur actuel
+    User? user = userCredential.user;
+
+    // Vérifiez si l'utilisateur est valide
+    if (user != null) {
+      // Ajoutez le champ "role" avec la valeur "admin" à l'utilisateur dans la base de données Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .set({
+        'role': 'admin',
+        'nom': 'ouedraogo', // Remplacez 'John Doe' par le nom complet de l'administrateur
+        'prenom': 'armel',
+        'number': '+22656104376',
+        'email': 'ashneouedraogo@gmail.com',
+        'password': 'conjugaison',
+        // Remplacez '+1234567890' par le numéro de téléphone de l'administrateur
+        'createdAt': FieldValue
+            .serverTimestamp(), // Utilisez FieldValue.serverTimestamp() pour enregistrer la date de création du compte
+        // Ajoutez d'autres champs si nécessaire
+      });
+
+      // Redirigez l'utilisateur vers la page suivante (HomePageScreen dans cet exemple)
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => HomePageScreen(),
+    ),
+  );
+    }
+  } catch (e) {
+    // Gérez les erreurs ici
+    print('Erreur lors de la création du compte administrateur : $e');
+  }
+}
+
 }

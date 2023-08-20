@@ -1,12 +1,10 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
-
 import '../../functions/firebase_fcm.dart';
 import '../../functions/functions.dart';
 import '../../models/money_transaction.dart';
@@ -27,37 +25,40 @@ import 'widgets/mes_tontines_top_box.dart';
 class MesTontinesScreen extends StatefulWidget {
   const MesTontinesScreen({super.key, required this.user});
 
-  final MyUser user;
+ final MyUser? user;
+
 
   @override
   State<MesTontinesScreen> createState() => _MesTontinesScreenState();
 }
 
 class _MesTontinesScreenState extends State<MesTontinesScreen> {
-  /////////////////////// scrolle controller //////////////////////////
-  ///
-  ///
   final ScrollController _scrolleController = ScrollController();
-
-  /////////////////////////////////// bool show elements //////////////
-  ///
   bool isHiden = false;
   bool isVisible = false;
-  ////////////////////////
-  ///
-  ///////////// its work but i need to try som thing //////////////////
-  ///
-  //List<Tontine> tontineList = [];
-  ///////////////////
-  ///
-  ///
-  ////////////////////////////// all transaction and filter by user id ::///////
-  ///
-  //Timer? _timer;
-  //////////////////////////
-  ///
-  //final List<MoneyTransaction> _allTransactions = [];
-  //List<DataByDate<MoneyTransaction>> _trasansactionsByDate = [];
+  List<DataByDate<MoneyTransaction>> AlltrasansactionsByDate = [];
+
+  @override
+  void initState() {
+    FirebaseFCM.storeNotificationToken();
+    if (widget.user?.email != null) {
+  FirebaseFCM.getTokenNotificationByEmail(userEmail: widget.user!.email!);
+}
+    super.initState();
+    Future.delayed(const Duration(seconds: 10)).then((_) {
+      setState(() {
+        isVisible = true;
+      });
+    });
+    getTontineAndTransaction();
+  }
+
+  @override
+  void dispose() {
+    _scrolleController.dispose();
+    super.dispose();
+  }
+
   Future<void> getTontineAndTransaction() async {
     await getAllTransactions();
     await getAllTontineListWhereCurrentUserParticiped();
@@ -68,18 +69,18 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
         await RemoteServices().getTransactionsList();
 
     if (allTransactions.isNotEmpty) {
-      globalTransactionsList.clear();
+      setState(() {
+        globalTransactionsList.clear();
+      });
       for (MoneyTransaction element in allTransactions) {
-        if (element.tontineCreatorId == widget.user.id ||
-            element.userId == widget.user.id) {
+        if (element.tontineCreatorId == widget.user?.id ||
+            element.userId == widget.user?.id) {
           setState(() {
             globalTransactionsList.add(element);
           });
         }
       }
-      globalTransactionsList.sort(
-        (a, b) => a.date.compareTo(b.date),
-      );
+      globalTransactionsList.sort((a, b) => a.date.compareTo(b.date));
       globalTransactionsList.sort((a, b) {
         int dateComparison = b.date.compareTo(a.date);
         if (dateComparison != 0) {
@@ -107,124 +108,48 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
     }
   }
 
-  ////////////////////////////// end filter //////////////////////////////////
-  ///
-  ///////////////////////////////
-  @override
-  void initState() {
-    //currentUSerTontineList.clear();
-    FirebaseFCM.storeNotificationToken();
-    FirebaseFCM.getTokenNotificationByEmail(userEmail: widget.user.email);
-    _scrolleController.addListener(() {
-      if (_scrolleController.position.userScrollDirection ==
-          ScrollDirection.forward) {
-        setState(() {
-          isHiden = false;
-        });
-      } else if (_scrolleController.position.userScrollDirection ==
-          ScrollDirection.reverse) {
-        setState(() {
-          isHiden = true;
-        });
-      }
-    });
-    //getUserOwnTontineList();
-    //getOwnTontineList();
-    //getAllTontineListWhereCurrentUserParticiped();
-    //getAllTransactions();
-
-    super.initState();
-    Future.delayed(const Duration(seconds: 10)).then((_) {
-      setState(() {
-        isVisible = true;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrolleController.dispose();
-    // _timer!.cancel();
-    super.dispose();
-  }
-
-  /*  void getUserOwnTontineList() async {
-    List<Tontine?> tontineList1 = await RemoteServices()
-        .getCurrentUserTontineList(id: int.parse(widget.user.id.toString()));
-    if (tontineList1.isNotEmpty) {
-      //currentUSerTontineList.clear();
-      for (var element in tontineList1) {
-        // tontineList.add(element!);
-        setState(() {
-          currentUSerTontineList.add(element!);
-        });
-      }
-    }
-  } */
-
-  ////////////////// tontine list from api //////////////////
-  /*  List<Tontine> allTontineWhereCurrentUserParticipe = [];
-  void getAllTontineListWhereCurrentUserParticiped() async {
-    List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
-    if (tontineList1.isNotEmpty) {
-      allTontineWhereCurrentUserParticipe.clear();
-      for (var element in tontineList1) {
-        if (element?.creatorId != widget.user.id &&
-            element!.membersId.contains(widget.user.id)) {
-          setState(() {
-            // tontineList.add(element!);
-            allTontineWhereCurrentUserParticipe.add(element);
-          });
-        }
-      }
-      print('je participe à : $allTontineWhereCurrentUserParticipe');
-    }
-  } */
-
   Future<void> getAllTontineListWhereCurrentUserParticiped() async {
     List<Tontine?> tontineList1 = await RemoteServices().getAllTontineList();
-    //List<Tontine> allTontineWhereCurrentUserParticipe = [];
+    List<Tontine> allTontineWhereCurrentUserParticipe = [];
 
     if (tontineList1.isNotEmpty) {
       allTontineWhereCurrentUserParticipe.clear();
       currentUSerTontineList.clear();
-      //allTontineWhereCurrentUserParticipe.clear();
       for (var element in tontineList1) {
-        if (element?.creatorId != widget.user.id &&
-            element!.membersId.contains(widget.user.id)) {
+        if (element?.creatorId != widget.user?.id &&
+            element!.membersId.contains(widget.user?.id)) {
           setState(() {
             allTontineWhereCurrentUserParticipe.add(element);
           });
         }
-        if (element?.creatorId == widget.user.id) {
+        if (element?.creatorId == widget.user?.id) {
           setState(() {
             currentUSerTontineList.add(element!);
           });
         }
       }
-      // print('je participe à : $allTontineWhereCurrentUserParticipe');
     }
-
-    // Écouter les mises à jour du flux
   }
 
-  ///////////////////////////////////
   void _showBottomSheet(BuildContext context, bool isCreateTontine) {
     showModalBottomSheet(
       backgroundColor: Colors.transparent,
       context: context,
       builder: (context) {
         return CreatetontineSheetContent(
-          user: widget.user,
+          user: widget.user!,
         );
       },
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+    // Obtenir le nom complet de l'utilisateur (fullName)
+    String fullName = widget.user?.fullName ?? "ouedraogo armel";
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 249, 249, 249),
         extendBody: true,
@@ -273,6 +198,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
 
   Widget getChild() {
     return Column(
+      
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ////////////////// top container mise en commentaire pour plutard
@@ -324,7 +250,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                         .copyWith(color: Palette.whiteColor, fontSize: 18),
                   ),
                   subtitle: Text(
-                    widget.user.fullName,
+                    widget.user!.fullName,
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                           height: 1.5,
                           color: Palette.whiteColor,
@@ -371,7 +297,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                       DateFormat('tontine_dd/MM/yyyy').format(
                                     DateTime.now(),
                                   ),
-                                  user: widget.user,
+                                  user: widget.user!,
                                 );
                               }));
                             },
@@ -415,7 +341,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return AllTransactionsHistory(
-                                          user: widget.user,
+                                          user: widget.user!,
                                           trasansactionsByDate:
                                               AlltrasansactionsByDate,
                                         );
@@ -448,7 +374,7 @@ class _MesTontinesScreenState extends State<MesTontinesScreen> {
                                   ////////// decommenter plutard pour voir tout les transaction du user connecter /////////////
                                   ///
                                   (index) => TransactionsWidget(
-                                    user: widget.user,
+                                    user: widget.user!,
                                     trasansactionsByDate:
                                         AlltrasansactionsByDate[index],
                                   ),

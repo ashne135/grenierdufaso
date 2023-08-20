@@ -13,11 +13,11 @@ import 'widgets/notifications_list.dart';
 
 class NotifsScreen extends StatefulWidget {
   const NotifsScreen({
-    super.key,
-    required this.user,
+    super.key
+    //required this.user,
   });
 
-  final MyUser user;
+ // final MyUser? user;
 
   @override
   State<NotifsScreen> createState() => _NotifsScreenState();
@@ -42,7 +42,7 @@ class _NotifsScreenState extends State<NotifsScreen> {
 
   Future<void> getNotifList() async {
     List<NotificationModel> thisUserNotifLis =
-        await RemoteServices().getCurrentUserNotifsList(id: widget.user.id!);
+        await RemoteServices().getCurrentUserNotifsList(id: 1);
     // print(thisUserNotifLis);
 
     if (thisUserNotifLis.isNotEmpty) {
@@ -108,7 +108,7 @@ class _NotifsScreenState extends State<NotifsScreen> {
     /////////////////:
     ///
     FirebaseFCM.updateUserIsNotifField(
-      email: widget.user.email,
+      email: '',
       isNotif: false,
     );
     getNotifList();

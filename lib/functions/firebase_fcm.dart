@@ -12,7 +12,7 @@ class FirebaseFCM {
     String? token = await FirebaseMessaging.instance.getToken();
     FirebaseFirestore.instance
         .collection('users')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .doc(FirebaseAuth.instance.currentUser?.uid)
         .set(
       {"token": token},
       SetOptions(merge: true),

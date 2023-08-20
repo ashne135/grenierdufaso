@@ -93,7 +93,7 @@ class _PinCodeScreenState extends State<PinCodeScreen> {
               MaterialPageRoute(
                 builder: (context) {
                   return HomePageScreen(
-                    user: widget.user,
+                    
                   );
                 },
               ),
